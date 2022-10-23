@@ -1,6 +1,6 @@
 mod engine;
-mod logo;
 mod errors;
+mod logo;
 
 use clap::Parser;
 
@@ -11,7 +11,12 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct RealmArgs {
-    #[arg(short, long, long_help = "path where realm should run", required = true)]
+    #[arg(
+        short,
+        long,
+        long_help = "path where realm should run",
+        required = true
+    )]
     directory: String, // TODO Default vault is current dir
 }
 
