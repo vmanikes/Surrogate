@@ -23,10 +23,8 @@ jobs:
       - name: Run tests
         run: make test
       - name: Coverage
-        if: matrix.build == 'stable'
         run: cargo tarpaulin --all-features -o Lcov --output-dir ./coverage
       - name: Coveralls
-        if: matrix.build == 'stable'
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.COVERALL_SECRET }}
