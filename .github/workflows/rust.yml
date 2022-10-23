@@ -14,8 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install Tarpaulin
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-tarpaulin
+          version: 0.22.0
+          use-tool-cache: true
       - name: Run tests
         run: make test
+      - name: Coverage
+        if: matrix.build == 'stable'
+        run: cargo tarpaulin --all-features -o Lcov --output-dir ./coverage
+      - name: Coveralls
+        if: matrix.build == 'stable'
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.COVERALL_SECRET }}
+
   build:
     runs-on: ubuntu-latest
     steps:

@@ -6,7 +6,8 @@ build:
 	cargo build
 
 test:
-	cargo test -- --nocapture
+	cargo test --all-features -- --nocapture
 
 fmt:
+	cargo clippy
 	cargo fmt -q
