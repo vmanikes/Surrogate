@@ -6,7 +6,6 @@ use clap::Parser;
 
 // TODO Build in release mode
 // TODO Build for different platforms
-// TODO Add github actions
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -24,10 +23,4 @@ fn main() {
     logo::generate::print_logo();
 
     // let args = RealmArgs::parse();
-
-    let path = "/Users/krishnachaitanya/Personal/Realm".to_string();
-
-    engine::file::get_tpl_file_paths(&path);
-
-    // list::list_template_files(".".to_string());
 }

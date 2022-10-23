@@ -27,7 +27,8 @@ jobs:
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.COVERALL_SECRET }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: Unit
 
   build:
     runs-on: ubuntu-latest
