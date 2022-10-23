@@ -1,7 +1,6 @@
-mod file_parser;
+mod engine;
 mod logo;
-
-use file_parser::list;
+mod errors;
 
 use clap::Parser;
 
@@ -19,7 +18,11 @@ struct RealmArgs {
 fn main() {
     logo::generate::print_logo();
 
-    let args = RealmArgs::parse();
+    // let args = RealmArgs::parse();
 
-    list::list_template_files(".".to_string());
+    let path = "/Users/krishnachaitanya/Personal/Realm".to_string();
+
+    engine::file::get_tpl_file_paths(&path);
+
+    // list::list_template_files(".".to_string());
 }
