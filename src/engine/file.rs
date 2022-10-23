@@ -2,13 +2,10 @@ use crate::errors::Error;
 use glob::{glob, Paths};
 
 /// Takes in a reference to the path and returns all the full qualified file paths of the .tpl files
-pub fn get_tpl_file_paths(path: &String) -> Result<Vec<String>, Error> {
-    let mut template_glob_pattern = path.clone();
-    template_glob_pattern.push_str("/**/*.tpl");
-
-    let template_files: Paths = match glob(template_glob_pattern.as_str()) {
+pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
+    let template_files: Paths = match glob(format!("{}/**/*.tpl", path).as_str()) {
         Ok(paths) => paths,
-        Err(_) => return Err(Error::PatternError),
+        Err(_) => return Err(Error::Pattern),
     };
 
     let mut results: Vec<String> = Vec::new();
@@ -16,13 +13,13 @@ pub fn get_tpl_file_paths(path: &String) -> Result<Vec<String>, Error> {
     for entry in template_files {
         let path = match entry {
             Ok(readable_path) => format!("{}", readable_path.display()),
-            Err(_) => return Err(Error::GlobDisplayError),
+            Err(_) => return Err(Error::GlobDisplay),
         };
 
         results.push(path);
     }
 
-    if results.len() == 0 {
+    if results.is_empty() {
         return Err(Error::NoMatchingTemplateFiles);
     }
 
@@ -69,7 +66,7 @@ mod tests {
         for test_case in test_cases {
             println!("Test Case: {}", test_case.test_name);
 
-            let template_paths = get_tpl_file_paths(&test_case.path);
+            let template_paths = get_tpl_file_paths(test_case.path.as_str());
             match template_paths {
                 Ok(val) => assert_eq!(val.len(), test_case.expected_template_count),
                 Err(e) => assert_eq!(e, test_case.expected_error.unwrap()),

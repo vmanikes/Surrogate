@@ -1,6 +1,6 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Error {
-    PatternError,
-    GlobDisplayError,
+    Pattern,
+    GlobDisplay,
     NoMatchingTemplateFiles,
 }
