@@ -20,6 +20,9 @@ struct RealmArgs {
 }
 
 fn main() {
+    std::env::set_var("RUST_LOG", "info");
+    env_logger::init();
+
     logo::generate::print_logo();
 
     // let args = RealmArgs::parse();
