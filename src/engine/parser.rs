@@ -4,7 +4,7 @@ use log::error;
 use serde_json::{Value};
 
 /// Reds the Realm.json from the root of the repo and creates an internal JSON representation from it
-pub fn realm_json_parser() -> Result<Value, Error>{
+pub fn realm_file_parser() -> Result<Value, Error>{
     let current_directory = match std::env::current_dir() {
         Ok(dir) => format!("{}", dir.display()),
         Err(e) => {
@@ -34,10 +34,12 @@ pub fn realm_json_parser() -> Result<Value, Error>{
 
 #[cfg(test)]
 mod tests {
-    use crate::engine::parser::realm_json_parser;
+    use crate::engine::parser::{realm_file_parser};
+    use pretty_assertions::assert_eq;
 
     #[test]
-    fn test_realm_json_parser() {
-        realm_json_parser();
+    fn test_realm_file_parser() {
+        let val = realm_file_parser().unwrap();
+        assert_eq!(val["file"], "this file is for realm testing, DO NOT DELETE")
     }
 }
