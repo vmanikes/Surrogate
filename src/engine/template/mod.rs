@@ -28,7 +28,7 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::engine::file::get_tpl_file_paths;
+    use crate::engine::template::get_tpl_file_paths;
     use crate::errors::Error;
     use pretty_assertions::assert_eq;
     use std::env;

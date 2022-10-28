@@ -7,3 +7,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/vmanikes/Realm/badge.svg?branch=main)](https://coveralls.io/github/vmanikes/Realm?branch=main)
 
 Something cool is coming up here
+
+Get file paths -> Done 
+Read Realm file -> Done
+
+

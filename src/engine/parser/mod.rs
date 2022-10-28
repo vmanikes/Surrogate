@@ -3,7 +3,7 @@ use crate::errors::Error;
 use log::error;
 use serde_json::{Value};
 
-/// Reds the Realm.json from the root of the repo and creates an internal JSON representation from it
+/// Reads the Realm.json from the root of the repo and creates an internal JSON representation from it
 pub fn realm_file_parser() -> Result<Value, Error>{
     let current_directory = match std::env::current_dir() {
         Ok(dir) => format!("{}", dir.display()),

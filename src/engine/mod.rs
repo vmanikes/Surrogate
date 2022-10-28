@@ -1,2 +1,2 @@
-pub mod file;
 pub mod parser;
+pub mod template;
