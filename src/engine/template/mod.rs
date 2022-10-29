@@ -18,6 +18,7 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
         let path = match entry {
             Ok(readable_path) => format!("{}", readable_path.display()),
             Err(err) => {
+                error!("glob display error: {}", err);
                 return Err(Error::GlobDisplay)
             },
         };
