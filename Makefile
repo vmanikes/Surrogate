@@ -3,7 +3,7 @@ gen-tree:
 
 build:
 	cargo clean
-	cargo build
+	cargo build --release
 
 test:
 	cargo test --all-features -- --nocapture
