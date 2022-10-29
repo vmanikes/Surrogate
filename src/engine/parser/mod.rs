@@ -81,12 +81,12 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::engine::parser::{realm_file_parser};
+    use crate::engine::parser::{realm_json_parser};
     use pretty_assertions::assert_eq;
 
     #[test]
     fn test_realm_file_parser() {
-        let val = realm_file_parser().unwrap();
+        let val = realm_json_parser().unwrap();
         assert_eq!(val["file"], "this file is for realm testing, DO NOT DELETE")
     }
 }
