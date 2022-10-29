@@ -25,7 +25,7 @@ fn main() {
 
     logo::generate::print_logo();
 
-    // engine::parser::generate_files_from_templates(".");
+    engine::parser::generate_files_from_templates(".");
 
-    let args = RealmArgs::parse();
+    // let args = RealmArgs::parse();
 }

@@ -38,7 +38,7 @@ fn realm_json_parser() -> Result<Value, Error>{
 /// Reads all the .tpl files, injects the values from realm json file and
 /// writes an actual file by removing the .tpl suffix
 pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
-    let templates: &Vec<String> = template::get_tpl_file_paths(path)?;
+    let templates: Vec<String> = template::get_tpl_file_paths(path)?;
     let realm_file_contents: Value = realm_json_parser()?; // TODO can this be passed to handlebar
 
     let mut handlebar_registry = Handlebars::new();
@@ -52,7 +52,10 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
 
         handlebar_registry.register_template_file(idx.to_string().as_str(), &template).unwrap();
 
-        let parsed_file_path = template.co().replace(".tpl", "").as_str();
+        let parsed_file_path = match template.strip_suffix(".tpl") {
+            Some(path) => path,
+            None => template.as_str()
+        };
 
         let mut output_file = match fs::File::create(parsed_file_path) {
             Ok(file) => file,

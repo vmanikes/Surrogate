@@ -29,7 +29,7 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
         return Err(Error::NoMatchingTemplateFiles);
     }
 
-    Ok(&results)
+    Ok(results)
 }
 
 #[cfg(test)]
