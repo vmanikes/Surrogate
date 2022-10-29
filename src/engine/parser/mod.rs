@@ -1,10 +1,13 @@
 use std::fs;
+use handlebars::Handlebars;
 use crate::errors::Error;
-use log::error;
+use crate::engine::template;
+use log::{error, info};
 use serde_json::{Value};
+use crate::errors::Error::{RenderingError, UnableToCreateFile};
 
 /// Reads the Realm.json from the root of the repo and creates an internal JSON representation from it
-pub fn realm_file_parser() -> Result<Value, Error>{
+fn realm_json_parser() -> Result<Value, Error>{
     let current_directory = match std::env::current_dir() {
         Ok(dir) => format!("{}", dir.display()),
         Err(e) => {
@@ -30,6 +33,47 @@ pub fn realm_file_parser() -> Result<Value, Error>{
     };
 
     Ok(v)
+}
+
+/// Reads all the .tpl files, injects the values from realm json file and
+/// writes an actual file by removing the .tpl suffix
+pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
+    let templates: &Vec<String> = template::get_tpl_file_paths(path)?;
+    let realm_file_contents: Value = realm_json_parser()?; // TODO can this be passed to handlebar
+
+    let mut handlebar_registry = Handlebars::new();
+    handlebar_registry.set_strict_mode(true);
+
+    info!("entering the magical world of REALM, brace for impact");
+    info!("found a total of {} templates in {}", templates.len(), path);
+
+    for (idx, template) in templates.iter().enumerate() {
+        info!("parsing template: {}", template);
+
+        handlebar_registry.register_template_file(idx.to_string().as_str(), &template).unwrap();
+
+        let parsed_file_path = template.co().replace(".tpl", "").as_str();
+
+        let mut output_file = match fs::File::create(parsed_file_path) {
+            Ok(file) => file,
+            Err(err) => {
+                error!("unable to create file {}: {}", parsed_file_path, err);
+                return Err(UnableToCreateFile)
+            }
+        };
+
+        match handlebar_registry.render_to_write(idx.to_string().as_str(), &realm_file_contents, &mut output_file) {
+            Err(err) => {
+                error!("unable to render template: {}", err);
+                return Err(RenderingError)
+            },
+            Ok(_) => continue
+        }
+    }
+
+    info!("done parsing all the template");
+    info!("exiting the magical world of Realm");
+    Ok(())
 }
 
 #[cfg(test)]

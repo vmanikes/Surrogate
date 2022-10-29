@@ -5,5 +5,7 @@ pub enum Error {
     NoMatchingTemplateFiles,
     UnableToFetchCurrentDir,
     NoRealmJSONFile,
-    UnableToReadJSON
+    UnableToReadJSON,
+    UnableToCreateFile,
+    RenderingError
 }

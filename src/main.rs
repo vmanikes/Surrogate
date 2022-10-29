@@ -19,28 +19,13 @@ struct RealmArgs {
     directory: String, // TODO Default vault is current dir
 }
 
-use handlebars::Handlebars;
-use serde_json::json;
-
 fn main() {
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
 
     logo::generate::print_logo();
 
-    // let args = RealmArgs::parse();
+    // engine::parser::generate_files_from_templates(".");
 
-    let mut reg = Handlebars::new();
-    reg.set_strict_mode(true);
-
-    reg.register_template_string("tpl_1", "Good afternoon, {{name.first}}").unwrap();
-
-    match reg.render("tpl_1", &json!({"name": "dsdsd"})) {
-        Ok(val) => println!("{}", val),
-        Err(e) => println!("{}", e),
-    };
-
-    // register template using given name
-    // .unwrap();
-    // println!("{}", reg.render("tpl_1", &json!({"name": "foo"})).unwrap());
+    let args = RealmArgs::parse();
 }

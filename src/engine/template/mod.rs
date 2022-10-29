@@ -1,11 +1,15 @@
 use crate::errors::Error;
 use glob::{glob, Paths};
+use log::error;
 
 /// Takes in a reference to the path and returns all the full qualified file paths of the .tpl files
 pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
     let template_files: Paths = match glob(format!("{}/**/*.tpl", path).as_str()) {
         Ok(paths) => paths,
-        Err(_) => return Err(Error::Pattern),
+        Err(err) => {
+            error!("pattern error: {}", err);
+            return Err(Error::Pattern)
+        },
     };
 
     let mut results: Vec<String> = Vec::new();
@@ -13,7 +17,9 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
     for entry in template_files {
         let path = match entry {
             Ok(readable_path) => format!("{}", readable_path.display()),
-            Err(_) => return Err(Error::GlobDisplay),
+            Err(err) => {
+                return Err(Error::GlobDisplay)
+            },
         };
 
         results.push(path);
@@ -23,7 +29,7 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
         return Err(Error::NoMatchingTemplateFiles);
     }
 
-    Ok(results)
+    Ok(&results)
 }
 
 #[cfg(test)]
