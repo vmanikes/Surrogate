@@ -20,7 +20,7 @@ fn main() {
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
 
-    logo::print_logo();
+    println!("{}", logo::LOGO);
 
     let args = SurrogateArgs::parse();
 
