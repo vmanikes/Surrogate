@@ -4,7 +4,7 @@ pub enum Error {
     GlobDisplay,
     NoMatchingTemplateFiles,
     UnableToFetchCurrentDir,
-    NoRealmJSONFile,
+    NoSurrogateJSONFile,
     UnableToReadJSON,
     UnableToCreateFile,
     RenderingError

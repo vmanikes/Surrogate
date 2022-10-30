@@ -6,8 +6,8 @@ use log::{error, info};
 use serde_json::{Value};
 use crate::errors::Error::{RenderingError, UnableToCreateFile};
 
-/// Reads the Realm.json from the root of the repo and creates an internal JSON representation from it
-fn realm_json_parser() -> Result<Value, Error>{
+/// Reads the Surrogate.json from the root of the repo and creates an internal JSON representation from it
+fn surrogate_json_parser() -> Result<Value, Error>{
     let current_directory = match std::env::current_dir() {
         Ok(dir) => format!("{}", dir.display()),
         Err(e) => {
@@ -16,17 +16,17 @@ fn realm_json_parser() -> Result<Value, Error>{
         }
     };
 
-    let realm_file_contents = match fs::read_to_string(format!("{}/Realm.json", current_directory)) {
+    let surrogate_file_contents = match fs::read_to_string(format!("{}/Surrogate.json", current_directory)) {
         Err(e) => {
-            error!("{} make sure you have Realm.json in the root of your repo", e);
-            return Err(Error::NoRealmJSONFile);
+            error!("{} make sure you have Surrogate.json in the root of your repo", e);
+            return Err(Error::NoSurrogateJSONFile);
         },
         Ok(contents) => contents
     };
 
-    let v: Value = match serde_json::from_str(realm_file_contents.as_str()) {
+    let v: Value = match serde_json::from_str(surrogate_file_contents.as_str()) {
         Err(e) => {
-            error!("unable to parse the realm json: {}", e);
+            error!("unable to parse the surrogate json: {}", e);
             return Err(Error::UnableToReadJSON);
         },
         Ok(val) => val,
@@ -35,16 +35,16 @@ fn realm_json_parser() -> Result<Value, Error>{
     Ok(v)
 }
 
-/// Reads all the .tpl files, injects the values from realm json file and
+/// Reads all the .tpl files, injects the values from surrogate json file and
 /// writes an actual file by removing the .tpl suffix
 pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
     let templates: Vec<String> = template::get_tpl_file_paths(path)?;
-    let realm_file_contents: Value = realm_json_parser()?; // TODO can this be passed to handlebar
+    let surrogate_file_contents: Value = surrogate_json_parser()?;
 
     let mut handlebar_registry = Handlebars::new();
     handlebar_registry.set_strict_mode(true);
 
-    info!("entering the magical world of REALM, brace for impact");
+    info!("entering the magical world of Surrogate, brace for impact");
     info!("found a total of {} templates in {}", templates.len(), path);
 
     for (idx, template) in templates.iter().enumerate() {
@@ -65,7 +65,7 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
             }
         };
 
-        match handlebar_registry.render_to_write(idx.to_string().as_str(), &realm_file_contents, &mut output_file) {
+        match handlebar_registry.render_to_write(idx.to_string().as_str(), &surrogate_file_contents, &mut output_file) {
             Err(err) => {
                 error!("unable to render template: {}", err);
                 return Err(RenderingError)
@@ -75,18 +75,18 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
     }
 
     info!("done parsing all the template");
-    info!("exiting the magical world of Realm");
+    info!("exiting the magical world of Surrogate");
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::engine::parser::{realm_json_parser};
+    use crate::engine::parser::{surrogate_json_parser};
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn test_realm_file_parser() {
-        let val = realm_json_parser().unwrap();
-        assert_eq!(val["file"], "this file is for realm testing, DO NOT DELETE")
+    fn test_surrogate_file_parser() {
+        let val = surrogate_json_parser().unwrap();
+        assert_eq!(val["file"], "this file is for surrogate testing, DO NOT DELETE")
     }
 }
