@@ -3,6 +3,8 @@ mod errors;
 mod logo;
 
 use clap::Parser;
+use log::{error};
+use crate::errors::Error;
 
 // TODO Build for different platforms
 
@@ -23,5 +25,10 @@ fn main() {
 
     let args = SurrogateArgs::parse();
 
-    engine::parser::generate_files_from_templates(args.directory.as_str()).unwrap()
+    match engine::parser::generate_files_from_templates(args.directory.as_str()) {
+        Err(e) => {
+            error!("{:?}", e)
+        }
+        _ => {}
+    }
 }

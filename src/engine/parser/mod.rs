@@ -81,12 +81,42 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::engine::parser::{surrogate_json_parser};
+    use crate::engine::parser::{surrogate_json_parser, generate_files_from_templates};
     use pretty_assertions::assert_eq;
+    use crate::errors::Error;
 
     #[test]
     fn test_surrogate_file_parser() {
         let val = surrogate_json_parser().unwrap();
         assert_eq!(val["file"], "this file is for surrogate testing, DO NOT DELETE")
+    }
+
+    #[test]
+    fn test_generate_files_from_templates() {
+        struct TestCase {
+            test_name: String,
+            path: String,
+            expected_result: Result<(), Error>,
+        }
+
+        let test_cases: [TestCase; 2] = [
+            TestCase {
+                test_name: "valid test template path is current dir ( with . )".to_string(),
+                path: ".".to_string(),
+                expected_result: Ok(()),
+            },
+            TestCase {
+                test_name: "path without any tpl files".to_string(),
+                path: "/tmp".to_string(),
+                expected_result: Err(Error::GlobDisplay),
+            }
+        ];
+
+        for test_case in test_cases {
+            println!("Test Case: {}", test_case.test_name);
+
+            let result = generate_files_from_templates(test_case.path.as_str());
+            assert_eq!(test_case.expected_result, result);
+        }
     }
 }
