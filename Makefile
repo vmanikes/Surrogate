@@ -5,6 +5,9 @@ build:
 	cargo clean
 	cargo build --release
 
+update:
+	cargo update -p surrogate
+
 test:
 	cargo test --all-features -- --nocapture
 
