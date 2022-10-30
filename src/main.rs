@@ -3,7 +3,7 @@ mod errors;
 mod logo;
 
 use clap::Parser;
-use log::{error};
+use log::error;
 
 // TODO Build for different platforms
 

@@ -1,13 +1,13 @@
-use std::fs;
-use handlebars::Handlebars;
-use crate::errors::Error;
 use crate::engine::template;
-use log::{error, info};
-use serde_json::{Value};
+use crate::errors::Error;
 use crate::errors::Error::{RenderingError, UnableToCreateFile};
+use handlebars::Handlebars;
+use log::{error, info};
+use serde_json::Value;
+use std::fs;
 
 /// Reads the Surrogate.json from the root of the repo and creates an internal JSON representation from it
-fn surrogate_json_parser() -> Result<Value, Error>{
+fn surrogate_json_parser() -> Result<Value, Error> {
     let current_directory = match std::env::current_dir() {
         Ok(dir) => format!("{}", dir.display()),
         Err(e) => {
@@ -16,19 +16,20 @@ fn surrogate_json_parser() -> Result<Value, Error>{
         }
     };
 
-    let surrogate_file_contents = match fs::read_to_string(format!("{}/Surrogate.json", current_directory)) {
-        Err(_) => {
-            error!("make sure you have Surrogate.json in the root of your repo");
-            return Err(Error::NoSurrogateJSONFile);
-        },
-        Ok(contents) => contents
-    };
+    let surrogate_file_contents =
+        match fs::read_to_string(format!("{}/Surrogate.json", current_directory)) {
+            Err(_) => {
+                error!("make sure you have Surrogate.json in the root of your repo");
+                return Err(Error::NoSurrogateJSONFile);
+            }
+            Ok(contents) => contents,
+        };
 
     let v: Value = match serde_json::from_str(surrogate_file_contents.as_str()) {
         Err(e) => {
             error!("unable to parse the surrogate json: {}", e);
             return Err(Error::UnableToParseJSON);
-        },
+        }
         Ok(val) => val,
     };
 
@@ -50,27 +51,33 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
     for (idx, template) in templates.iter().enumerate() {
         info!("parsing template: {}", template);
 
-        handlebar_registry.register_template_file(idx.to_string().as_str(), &template).unwrap();
+        handlebar_registry
+            .register_template_file(idx.to_string().as_str(), &template)
+            .unwrap();
 
         let parsed_file_path = match template.strip_suffix(".tpl") {
             Some(path) => path,
-            None => template.as_str()
+            None => template.as_str(),
         };
 
         let mut output_file = match fs::File::create(parsed_file_path) {
             Ok(file) => file,
             Err(err) => {
                 error!("unable to create file {}: {}", parsed_file_path, err);
-                return Err(UnableToCreateFile)
+                return Err(UnableToCreateFile);
             }
         };
 
-        match handlebar_registry.render_to_write(idx.to_string().as_str(), &surrogate_file_contents, &mut output_file) {
+        match handlebar_registry.render_to_write(
+            idx.to_string().as_str(),
+            &surrogate_file_contents,
+            &mut output_file,
+        ) {
             Err(err) => {
                 error!("unable to render template: {}", err);
-                return Err(RenderingError)
-            },
-            Ok(_) => continue
+                return Err(RenderingError);
+            }
+            Ok(_) => continue,
         }
     }
 
@@ -81,14 +88,17 @@ pub fn generate_files_from_templates(path: &str) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::engine::parser::{surrogate_json_parser, generate_files_from_templates};
-    use pretty_assertions::assert_eq;
+    use crate::engine::parser::{generate_files_from_templates, surrogate_json_parser};
     use crate::errors::Error;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn test_surrogate_file_parser() {
         let val = surrogate_json_parser().unwrap();
-        assert_eq!(val["file"], "this file is for surrogate testing, DO NOT DELETE")
+        assert_eq!(
+            val["file"],
+            "this file is for surrogate testing, DO NOT DELETE"
+        )
     }
 
     #[test]
@@ -109,7 +119,7 @@ mod tests {
                 test_name: "path without any tpl files".to_string(),
                 path: "/tmp".to_string(),
                 expected_result: Err(Error::GlobDisplay),
-            }
+            },
         ];
 
         for test_case in test_cases {

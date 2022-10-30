@@ -8,8 +8,8 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
         Ok(paths) => paths,
         Err(err) => {
             error!("{}: {}", Error::Pattern.to_string(), err);
-            return Err(Error::Pattern)
-        },
+            return Err(Error::Pattern);
+        }
     };
 
     let mut results: Vec<String> = Vec::new();
@@ -19,8 +19,8 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
             Ok(readable_path) => format!("{}", readable_path.display()),
             Err(err) => {
                 error!("{}: {}", Error::GlobDisplay.to_string(), err);
-                return Err(Error::GlobDisplay)
-            },
+                return Err(Error::GlobDisplay);
+            }
         };
 
         results.push(path);
