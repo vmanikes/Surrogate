@@ -6,8 +6,7 @@ authors = ["Venkata S S K M Chaitanya"]
 description = "Terraform backend and version templater"
 readme = "README.md"
 repository = "https://github.com/vmanikes/Surrogate"
-license = ""
-license-file = ""
+license-file = "LICENSE"
 
 [dependencies]
 clap = { version = "^4.0", features = ["derive"] }
