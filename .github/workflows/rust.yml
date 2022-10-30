@@ -12,7 +12,7 @@ env:
 jobs:
   rustfmt:
     name: rustfmt
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
