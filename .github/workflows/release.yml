@@ -7,28 +7,34 @@ on:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
 jobs:
-  create_release:
-    name: Create release
-    runs-on: ubuntu-latest
+  create-release:
+    name: create-release
+    runs-on: ubuntu-22.04
+      # env:
+      # Set to force version number, e.g., when no tag exists.
+    # RG_VERSION: TEST-0.0.0
     outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      upload_url: ${{ steps.release.outputs.upload_url }}
       rg_version: ${{ env.RG_VERSION }}
-  steps:
-    - name: Get the release version from the tag
-      uses: actions/checkout@v3
-      shell: bash
-      if: env.RG_VERSION == ''
-      run: |
-        echo "RG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-        echo "version is: ${{ env.RG_VERSION }}"
-    - name: Create GitHub release
-      id: release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.RG_VERSION }}
-        release_name: ${{ env.RG_VERSION }}
+    steps:
+      - name: Get the release version from the tag
+        shell: bash
+        if: env.RG_VERSION == ''
+        run: |
+          # Apparently, this is the right way to get a tag name. Really?
+          #
+          # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
+          echo "RG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "version is: ${{ env.RG_VERSION }}"
+      - name: Create GitHub release
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RG_VERSION }}
+          release_name: ${{ env.RG_VERSION }}
+
 
   build-release:
     name: build-release
