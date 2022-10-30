@@ -6,28 +6,28 @@ on:
     # - ag/work
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
-  jobs:
-    create_release:
-      name: Create release
-      runs-on: ubuntu-latest
-      outputs:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        rg_version: ${{ env.RG_VERSION }}
-    steps:
-      - name: Get the release version from the tag
-        shell: bash
-        if: env.RG_VERSION == ''
-        run: |
-          echo "RG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "version is: ${{ env.RG_VERSION }}"
-      - name: Create GitHub release
-        id: release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.RG_VERSION }}
-          release_name: ${{ env.RG_VERSION }}
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      rg_version: ${{ env.RG_VERSION }}
+  steps:
+    - name: Get the release version from the tag
+      shell: bash
+      if: env.RG_VERSION == ''
+      run: |
+        echo "RG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        echo "version is: ${{ env.RG_VERSION }}"
+    - name: Create GitHub release
+      id: release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.RG_VERSION }}
+        release_name: ${{ env.RG_VERSION }}
 
   build-release:
     name: build-release
