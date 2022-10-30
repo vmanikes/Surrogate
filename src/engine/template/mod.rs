@@ -7,7 +7,7 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
     let template_files: Paths = match glob(format!("{}/**/*.tpl", path).as_str()) {
         Ok(paths) => paths,
         Err(err) => {
-            error!("pattern error: {}", err);
+            error!("{}: {}", Error::Pattern.to_string(), err);
             return Err(Error::Pattern)
         },
     };
@@ -18,7 +18,7 @@ pub fn get_tpl_file_paths(path: &str) -> Result<Vec<String>, Error> {
         let path = match entry {
             Ok(readable_path) => format!("{}", readable_path.display()),
             Err(err) => {
-                error!("glob display error: {}", err);
+                error!("{}: {}", Error::GlobDisplay.to_string(), err);
                 return Err(Error::GlobDisplay)
             },
         };

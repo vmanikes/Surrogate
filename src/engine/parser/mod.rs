@@ -11,14 +11,14 @@ fn surrogate_json_parser() -> Result<Value, Error>{
     let current_directory = match std::env::current_dir() {
         Ok(dir) => format!("{}", dir.display()),
         Err(e) => {
-            error!("{}", e);
+            error!("{}: {}", Error::UnableToFetchCurrentDir.to_string(), e);
             return Err(Error::UnableToFetchCurrentDir);
         }
     };
 
     let surrogate_file_contents = match fs::read_to_string(format!("{}/Surrogate.json", current_directory)) {
-        Err(e) => {
-            error!("{} make sure you have Surrogate.json in the root of your repo", e);
+        Err(_) => {
+            error!("make sure you have Surrogate.json in the root of your repo");
             return Err(Error::NoSurrogateJSONFile);
         },
         Ok(contents) => contents
@@ -27,7 +27,7 @@ fn surrogate_json_parser() -> Result<Value, Error>{
     let v: Value = match serde_json::from_str(surrogate_file_contents.as_str()) {
         Err(e) => {
             error!("unable to parse the surrogate json: {}", e);
-            return Err(Error::UnableToReadJSON);
+            return Err(Error::UnableToParseJSON);
         },
         Ok(val) => val,
     };

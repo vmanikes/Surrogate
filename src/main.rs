@@ -4,7 +4,6 @@ mod logo;
 
 use clap::Parser;
 use log::{error};
-use crate::errors::Error;
 
 // TODO Build for different platforms
 
@@ -27,7 +26,7 @@ fn main() {
 
     match engine::parser::generate_files_from_templates(args.directory.as_str()) {
         Err(e) => {
-            error!("{:?}", e)
+            error!("{}", e.to_string());
         }
         _ => {}
     }
