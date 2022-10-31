@@ -2,16 +2,16 @@ name: release
 on:
   push:
     # Enable when testing release infrastructure on a branch.
-    # branches:
-    # - ag/work
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
+    branches:
+      - release-test-4
+#    tags:
+#      - "[0-9]+.[0-9]+.[0-9]+"
 jobs:
   create-release:
     name: create-release
     runs-on: ubuntu-22.04
       # env:
-      # Set to force version number, e.g., when no tag exists.
+    # Set to force version number, e.g., when no tag exists.
     # RG_VERSION: TEST-0.0.0
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
@@ -43,7 +43,7 @@ jobs:
     env:
       # For some builds, we use cross to test on 32-bit and big-endian
       # systems.
-      CARGO: cargo
+      CARGO: cross
       # When CARGO is set to CROSS, this is set to `--target matrix.target`.
       TARGET_FLAGS: ""
       # When CARGO is set to CROSS, TARGET_DIR includes matrix.target.
@@ -54,16 +54,12 @@ jobs:
       PCRE2_SYS_STATIC: 1
     strategy:
       matrix:
-        build: [linux, linux-arm, macos, win-msvc, win-gnu, win32-msvc]
+        build: [linux, macos, win-msvc, win-gnu, win32-msvc, macos-arm]
         include:
           - build: linux
             os: ubuntu-22.04
             rust: nightly
             target: x86_64-unknown-linux-musl
-          - build: linux-arm
-            os: ubuntu-22.04
-            rust: nightly
-            target: arm-unknown-linux-gnueabihf
           - build: macos
             os: macos-12
             rust: nightly
@@ -80,6 +76,10 @@ jobs:
             os: windows-2022
             rust: nightly
             target: i686-pc-windows-msvc
+          - build: macos
+            os: macos-12
+            rust: nightly
+            target: aarch64-apple-darwin
 
     steps:
       - name: Checkout repository
