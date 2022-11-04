@@ -30,6 +30,7 @@ jobs:
       - name: Install Targets
         shell: bash
         run: |
+          sudo apt install gcc-multilib xz-utils liblz4-tool musl-tools asciidoctor zsh brotli zstd
           rustup target add ${{ matrix.target }}
       - name: Build
         shell: bash
