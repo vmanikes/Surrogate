@@ -17,10 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          components: rustfmt
+          components: rustfmt,clippy
       - name: Check formatting
         run: cargo fmt --all --check
 
