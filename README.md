@@ -7,6 +7,12 @@
 
 Surrogate is a templating engine and acts like a swiss army knife for all your templating needs.
 
+## Installation
+- Make sure you have `rust` and `cargo` installed
+- Run the following command to build the surrogate binary `cargo build --release` and you can see the binary listed in the 
+`target` directory
+- Move the built binary to `/usr/bin`
+
 ## Usage
 ```text
 surrogate --help
