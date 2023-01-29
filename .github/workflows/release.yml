@@ -25,10 +25,10 @@ jobs:
         with:
           toolchain: stable
           components: rustfmt,clippy
-      - name: Check Target
+      - name: Install target
         shell: bash
         run: |
-          rustup target list
+          rustup target add ${{ matrix.target }}
 #      - name: Install Targets
 #        shell: bash
 #        run: |
