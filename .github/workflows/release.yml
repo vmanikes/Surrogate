@@ -15,7 +15,7 @@ jobs:
 #          - x86_64-unknown-linux-musl
 #          - x86_64-unknown-linux-gnu
 #          - x86_64-unknown-linux-gnux32
-        os: [ubuntu-latest]
+        os: [macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
