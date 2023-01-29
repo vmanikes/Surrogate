@@ -25,10 +25,10 @@ jobs:
         with:
           toolchain: stable
           components: rustfmt,clippy
-      - name: Check Cargo
+      - name: Check Target
         shell: bash
         run: |
-          cargo --version
+          rustup target list
 #      - name: Install Targets
 #        shell: bash
 #        run: |
