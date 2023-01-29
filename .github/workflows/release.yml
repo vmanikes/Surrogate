@@ -29,16 +29,11 @@ jobs:
         shell: bash
         run: |
           rustup target add ${{ matrix.target }}
-#      - name: Install Targets
-#        shell: bash
-#        run: |
-#          sudo apt update && sudo apt upgrade -y
-#          sudo apt install gcc-multilib xz-utils liblz4-tool musl-tools asciidoctor zsh brotli zstd build-essential
-#          rustup target add ${{ matrix.target }}
-#      - name: Build
-#        shell: bash
-#        run: |
-#          cargo build --release --target ${{ matrix.target }}
+      - name: Build to target
+        shell: bash
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+          ls -ali target/
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
 #        with:
